@@ -20,14 +20,14 @@ if ($file_count > 0)
 
 	foreach ($unimported_decoded as $unimported_file_info)
 	{
-		//exec("rdimport --verbose --delete-source --segue-level=-16 NEWS-LOCAL temp/" . $unimported_file_info['audiofile'],$output);
+		exec("rdimport --verbose --delete-source --segue-level=-16 NEWS-LOCAL temp/" . $unimported_file_info['audiofile'],$output);
 		
-		//FOR TESTING:
-		$output = array();
-		array_push($output, "FOO");
-		array_push($output, "BAR");
-		array_push($output, "Importing file \"IRN.mp3\" to cart 060601 ... done.");
-		array_push($output, "BAZ");
+		//FOR LOCAL TESTING:
+		//$output = array();
+		//array_push($output, "FOO");
+		//array_push($output, "BAR");
+		//array_push($output, "Importing file \"IRN.mp3\" to cart 060601 ... done.");
+		//array_push($output, "BAZ");
 	
 	
 		// Looking for something like 
