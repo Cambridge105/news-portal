@@ -2,7 +2,7 @@
 require_once("config.php.inc");
 $file_count = 0;
 
-$temp_dir = tempnam(sys_get_temp_dir(), 'localnews-import');
+$temp_dir = sys_get_temp_dir() . '/localnews-import/';
 mkdir($temp_dir, 0755);
 
 $unimported_json = file_get_contents($remote_path . "unimported_audio.php");
