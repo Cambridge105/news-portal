@@ -70,12 +70,11 @@ function formatTimestampAsDate(timestamp) {
 }
 
 function markScriptUsed(id) {
-	// TODO: Ping back to db
 	if ($('#scriptUsedDate').html() == "N/A")
 	{
 		$('#scriptUsedDate').html(formatTimestampAsDate(Date.now() / 1000));
 		var req = $.ajax({
-			url: "http://localhost:8002/server/mark_script_used.php?id=" + id,
+			url: "/mark_script_used.php?id=" + id,
 			dataType: "jsonp",
 			timeout: 5000,
 			jsonpCallback: "handleResponse"
