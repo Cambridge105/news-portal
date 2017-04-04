@@ -18,11 +18,12 @@ $hasaudio = 0;
 $uploadOK = 0;
 $audiofilename = "";
 
+require_once("db_credentials.php");											
+$mysql_conn = new mysqli($db_host, $db_user, $db_pass, 'localnews');
+
 if ($_POST)
 {
 	$uploadOK = 1;
-	require_once("db_credentials.php");											
-	$mysql_conn = new mysqli($db_host, $db_user, $db_pass, 'localnews');
 }
 
 if (!empty($_FILES["audiofile"]["name"]))
