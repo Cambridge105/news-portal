@@ -1,13 +1,17 @@
 <?php
+require_once("config.php.inc");
 $file_count = 0;
-$remote_path = "http://localhost:8002/server/";
+
+$temp_dir = tempnam(sys_get_temp_dir(), 'localnews-import');
+mkdir($temp_dir, 0755);
+
 $unimported_json = file_get_contents($remote_path . "unimported_audio.php");
 $unimported_decoded = json_decode($unimported_json,true);
 foreach ($unimported_decoded as $unimported_file_info)
 {
 	echo "Downloading from " . $remote_path . "uploads/" . $unimported_file_info['audiofile'];
 	$downloaded_audio = file_get_contents($remote_path . "uploads/" . $unimported_file_info['audiofile']);
-	file_put_contents("temp/" . $unimported_file_info['audiofile'],$downloaded_audio);
+	file_put_contents($temp_dir . "/" . $unimported_file_info['audiofile'],$downloaded_audio);
 	$downloaded_audio = ""; // Free memory
 	$file_count++;
 }
@@ -20,7 +24,7 @@ if ($file_count > 0)
 
 	foreach ($unimported_decoded as $unimported_file_info)
 	{
-		exec("rdimport --verbose --delete-source --segue-level=-16 NEWS-LOCAL temp/" . $unimported_file_info['audiofile'],$output);
+		exec("rdimport --verbose --delete-source --segue-level=-16 NEWS-LOCAL " . $temp_dir . "/" . $unimported_file_info['audiofile'],$output);
 		
 		//FOR LOCAL TESTING:
 		//$output = array();
@@ -51,6 +55,7 @@ if ($file_count > 0)
 	
 }
 
+rmdir($temp_dir);
 
 function file_post_contents($url, $data, $username = null, $password = null)
 {
