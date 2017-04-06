@@ -97,10 +97,10 @@ $mysql_conn->close();
 <form action="upload.php" method="post" id="uploadForm" enctype="multipart/form-data">
 <label for="title">Title*:</label> <input type="text" maxlength="25" name="title" required><br>
 <label for="embargo">Embargo until:</label> <input type="datetime-local" name="embargo"> <em>Leave blank if for immediate release</em><br>
-<label for="category">Category:</label> <select name="category"><option value="NEWS">News</option><option value="SPORT">Sport</option><option value="SHOWBIZ">Showbiz</option><option value="BUSINESS">Business</option><option value="BBC">BBC</option><option value="PROSPECTS">Prospects</option><option value="PINNED">Pinned</option></select><br>
+<label for="category">Category:</label> <select name="category" id="category"><option value="NEWS">News</option><option value="SPORT">Sport</option><option value="SHOWBIZ">Showbiz</option><option value="BUSINESS">Business</option><option value="BBC">BBC</option><option value="PROSPECTS">Prospects</option><option value="PINNED">Pinned</option></select><br>
 <label for="addedby">Added by*:</label> <input type="text" maxlength="25" name="addedby" required><br>
 <label for="audiofile">Audio file:</label> <input type="file" name="audiofile"><br>
-<label for="audiocredit">Audio credit:</label> <input type="text" maxlength="30" name="audiocredit"><br>
+<label for="audiocredit">Audio credit:</label> <input type="text" maxlength="30" id="audiocredit" name="audiocredit"><br>
 <br>
 Script*:<br>
 <textarea name="script" rows="10" cols="70" required>
@@ -108,5 +108,18 @@ Script*:<br>
 <input type="submit" value="Upload">
 </form>
 <hr class="clear">
+<script>
+$( "#category" ).change(function() {
+  var newCategory = $("#category").val();
+  if (newCategory == "BBC" && $("#audiocredit").val().length<1)
+	{
+		$("#audiocredit").val("BBC Radio Cambridgeshire");
+	}
+	else if (newCategory != "BBC" && $("#audiocredit").val() == "BBC Radio Cambridgeshire")
+	{
+		$("#audiocredit").val("");
+	}
+});
+</script>
 </body>
 </html> 
