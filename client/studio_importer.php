@@ -24,7 +24,7 @@ if ($file_count > 0)
 
 	foreach ($unimported_decoded as $unimported_file_info)
 	{
-		exec("rdimport --verbose --delete-source --segue-level=-16 NEWS-LOCAL " . $temp_dir . "/" . $unimported_file_info['audiofile'],$output);
+		exec("rdimport --verbose --delete-source --segue-level=-16 NEWS-LOCAL \"" . $temp_dir . "/" . str_replace(" ","\ ",$unimported_file_info['audiofile']) . "\"",$output);
 		
 		//FOR LOCAL TESTING:
 		//$output = array();
