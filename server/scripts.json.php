@@ -2,7 +2,7 @@
 require_once("db_credentials.php");											
 $mysql_conn = new mysqli($db_host, $db_user, $db_pass, 'localnews');
 	
-$query = mysqli_query($mysql_conn, "SELECT id,title,UNIX_TIMESTAMP(embargo) AS embargo,category,cart,audiofilename AS audiofile,audiocredit,addedby,UNIX_TIMESTAMP(addeddate) AS addeddate,UNIX_TIMESTAMP(scriptused) AS scriptused,`text` FROM stories WHERE ((category='PINNED') OR (addeddate > NOW() - INTERVAL 14 DAY))");
+$query = mysqli_query($mysql_conn, "SELECT id,title,UNIX_TIMESTAMP(embargo) AS embargo,category,cart,audiofilename AS audiofile,audiocredit,addedby,UNIX_TIMESTAMP(addeddate) AS addeddate,UNIX_TIMESTAMP(scriptused) AS scriptused,`text` FROM stories WHERE ((category='PINNED') OR (addeddate > NOW() - INTERVAL 14 DAY))  ORDER BY addeddate DESC");
 $rows = array();
 while($r = mysqli_fetch_assoc($query)) {
 	$rows[] = $r;
