@@ -35,7 +35,7 @@ function loadItem(id) {
 			 if (!item.cart) {item.cart = "N/A";}
 			 metadata += ">" + formatTimestampAsDate(item.embargo) + "</span></p>";
 			 metadata += "<p><span class=\"key\">Category:</span> <span class=\"value cat_" + item.category + "\">" + item.category + "</span></p>";
-			 metadata += "<p><span class=\"key\">Audio file:</span> <span class=\"value\">" + item.audiofile + " (<b>Cart</b>: " + item.cart + ")</span></p>";
+			 metadata += "<p><span class=\"key\">Audio file:</span> <span class=\"value\"><a href=\"uploads/" + item.audiofile + "\">" + item.audiofile + "</a> (<b>Cart</b>: " + item.cart + ")</span></p>";
 			 metadata += "<p><span class=\"key\">Audio credit:</span> <span class=\"value\">" + item.audiocredit + "</span></p>";
 			 metadata += "<p><span class=\"key\">Added By:</span> <span class=\"value\">" + item.addedby + "</span></p>";
 			 metadata += "<p><span class=\"key\">Added Date:</span> <span class=\"value\">" + formatTimestampAsDate(item.addeddate) + "</span></p>";
