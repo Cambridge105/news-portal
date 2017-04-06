@@ -43,7 +43,4 @@ $db_host="<SERVERNAME>";
 4. Set *studio_importer.php* to run in a cron job every minute
 
 ## To do list ##
-- Delete imported audio from the remote *uploads/* directory
-- Present a record of when clips were played in the UI (we can get this from the *_SRT tables in the Rivendell database)
-- Implement HTTP Basic Auth to restrict access
-- Ensure sticky stories appear at the top of the list
+[See the Kanban board](https://github.com/Cambridge105/news-portal/projects/1)
