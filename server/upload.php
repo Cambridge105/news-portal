@@ -27,52 +27,15 @@ $mysql_conn = new mysqli($db_host, $db_user, $db_pass, 'localnews');
 if ($_POST)
 {
 	$uploadOK = 1;
+	$audiofilename = mysqli_real_escape_string($mysql_conn, $_POST['uploadedAudioFile']);
 }
 
-if (!empty($_FILES["audiofile"]["name"]))
+if (!empty($_POST['renameaudio']))
 {
-	$target_dir = "uploads/";
-	$uploaded_filename = basename($_FILES["audiofile"]["name"]);
-	if (!empty($_POST['renameaudio']))
-	{
-		$uploaded_filename = $_POST['renameaudio'];
-	}
-	$target_file = $target_dir . $uploaded_filename;
-	$hasaudio = 1;
-	$isMP3=false;
-	$isWAV=false;
-	$imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
-	// Check if file already exists
-	if (file_exists($target_file)) {
-		 echo "Sorry, file already exists.";
-		 $hasaudio = 0;
-	}
-	// Check file size
-	if ($_FILES["audiofile"]["size"] > 10000000) {
-		 echo "Sorry, your file is too large.";
-		 $hasaudio = 0;
-	}
-	// Allow certain file formats
-	if($imageFileType == "mp3") {$isMP3 = true;} elseif ($imageFileType=="wav") {$isWAV=true;} else{
-		 echo "Sorry, only MP3 and WAV files are allowed.";
-		 $hasaudio = 0;
-	}
-	// Check if $hasaudio is set to 0 by an error
-	if ($hasaudio === 0) {
-		$uploadOK = 0; // Prevents the db insert later 
-		 echo "Sorry, your file was not uploaded."; // if everything is ok, try to upload file
-		 } else {
-		 if (move_uploaded_file($_FILES["audiofile"]["tmp_name"], $target_file)) {
-			 echo "The file ". $uploaded_filename . " has been uploaded.";
-			 $audiofilename = $uploaded_filename;
-		 } else {
-			 echo "Sorry, there was an error uploading your file.";
-		 }
-	}
+	$renameaudio = mysqli_real_escape_string($mysql_conn, $_POST['renameaudio']);
+	rename("uploads/" . $audiofilename, "uploads/" . $renameaudio);
+	$audiofilename = $renameaudio;
 }
-
-
-
 
 
 if ($uploadOK == 1) 
@@ -103,18 +66,20 @@ $mysql_conn->close();
 
 <h2>Upload</h2>
 <form action="upload.php" method="post" id="uploadForm" enctype="multipart/form-data">
+<div id="dropArea">Drop the audio file to upload here</div>
+<div id="progressBar"><div id="progress"></div></div>
 <label for="title">Title*:</label> <input type="text" maxlength="25" name="title" required><br>
 <label for="embargo">Embargo until:</label> <input type="datetime-local" name="embargo"> <em>Leave blank if for immediate release</em><br>
 <label for="category">Category:</label> <select name="category" id="category"><option value="NEWS">News</option><option value="SPORT">Sport</option><option value="SHOWBIZ">Showbiz</option><option value="BUSINESS">Business</option><option value="BBC">BBC</option><option value="PROSPECTS">Prospects</option><option value="PINNED">Pinned</option></select><br>
 <label for="addedby">Added by*:</label> <input type="text" maxlength="25" name="addedby" required value="<?php echo $_SERVER['PHP_AUTH_USER'] ?>"><br>
-<label for="audiofile">Audio file:</label> <input type="file" name="audiofile"><br>
 <label for="renameaudio">Rename audio file:</label> <input type="text" maxlength="30" id="renameaudio" name="renameaudio"><br>
+<input id="uploadedAudioFile" type="hidden" value="">
 <label for="audiocredit">Audio credit:</label> <input type="text" maxlength="30" id="audiocredit" name="audiocredit"><br>
 <br>
 Script*:<br>
 <textarea name="script" rows="10" cols="70" required>
 </textarea><br>
-<input type="submit" value="Upload">
+<input type="submit" id="formSubmit" value="Upload">
 </form>
 <hr class="clear">
 <script>
@@ -129,6 +94,77 @@ $( "#category" ).change(function() {
 		$("#audiocredit").val("");
 	}
 });
+
+function dragOver(evt) {
+    evt.stopPropagation();
+    evt.preventDefault();
+    return false;
+}
+
+
+function dropEvent(evt) {
+    evt.stopPropagation();
+    evt.preventDefault();
+    
+    var droppedFiles = evt.dataTransfer.files;
+
+    var formData = new FormData();
+    
+    for(var i = 0; i < droppedFiles.length; ++i) {
+        var file = droppedFiles[i];
+        
+        formData.append("audiofile", file);
+		$('#uploadedAudioFile').val(file.name);
+				
+    }
+	$('#formSubmit').prop('disabled', true);
+    
+    xhr = new XMLHttpRequest();
+	xhr.upload.addEventListener("progress", function(evt){
+      if (evt.lengthComputable) {
+        var percentComplete = (evt.loaded / evt.total)*100;
+		percentComplete = Math.floor(percentComplete);
+        $('#progress').width(percentComplete + "%")
+        console.log(percentComplete);
+      }
+    }, false);
+    
+    xhr.open("POST", "upload_audio.php");  
+    xhr.onreadystatechange = handleResult;
+    xhr.send(formData);
+   
+}
+
+function handleResult() {
+    if (xhr.readyState == 4 /* complete */) {
+        switch(xhr.status) {
+            case 200: /* Success */
+                $('#dropArea').css("color","black");
+				$('#dropArea').css("font-style","normal");
+				var jsonResponse = JSON.parse(xhr.responseText);
+				$('#dropArea').html(jsonResponse);
+				$('#formSubmit').prop('disabled', false);
+				if (jsonResponse.search("Sorry") > -1)
+				{
+					$('#progress').css("background-color","red");
+				}
+				else 
+				{
+					$('#progress').css("background-color","green");
+				}
+				break;
+            default:
+                break;
+        }
+        xhr = null;
+    }      
+}
+
+
+var dropArea = document.getElementById('dropArea');
+dropArea.addEventListener('drop', dropEvent, false);
+dropArea.addEventListener('dragover', dragOver, false);
+
 </script>
 </body>
 </html> 

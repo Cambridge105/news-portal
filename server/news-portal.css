@@ -31,3 +31,15 @@ input {margin-bottom:7px;}
 .cat_BBC {border-radius:5px; background-color:DarkRed; color:white; font-weight:bold; font-size:8pt;}
 .cat_PROSPECTS {border-radius:5px; background-color:Maroon; color:white; font-weight:bold; font-size:8pt;}
 .cat_PINNED {border-radius:5px; background-color:Chocolate; color:white; font-weight:bold; font-size:8pt;}
+#dropArea {
+    height: 70px;
+    width: 470px;
+    border:2px solid black;
+	margin:20px 2px;
+	padding:10px;
+	color:#aaa;
+	text-align:center;
+	font-style:italic;
+}
+div#progressBar {width:500px; height:30px; border:1px solid #aaa; padding:0px; margin:20px 0px;}
+div#progress {margin:0; padding:0; width:0%; background-color:green; height:30px;}
