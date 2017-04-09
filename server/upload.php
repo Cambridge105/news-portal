@@ -32,7 +32,12 @@ if ($_POST)
 if (!empty($_FILES["audiofile"]["name"]))
 {
 	$target_dir = "uploads/";
-	$target_file = $target_dir . basename($_FILES["audiofile"]["name"]);
+	$uploaded_filename = basename($_FILES["audiofile"]["name"]);
+	if (!empty($_POST['renameaudio']))
+	{
+		$uploaded_filename = $_POST['renameaudio'];
+	}
+	$target_file = $target_dir . $uploaded_filename;
 	$hasaudio = 1;
 	$isMP3=false;
 	$isWAV=false;
@@ -58,8 +63,8 @@ if (!empty($_FILES["audiofile"]["name"]))
 		 echo "Sorry, your file was not uploaded."; // if everything is ok, try to upload file
 		 } else {
 		 if (move_uploaded_file($_FILES["audiofile"]["tmp_name"], $target_file)) {
-			 echo "The file ". basename( $_FILES["audiofile"]["name"]). " has been uploaded.";
-			 $audiofilename = basename( $_FILES["audiofile"]["name"]);
+			 echo "The file ". $uploaded_filename . " has been uploaded.";
+			 $audiofilename = $uploaded_filename;
 		 } else {
 			 echo "Sorry, there was an error uploading your file.";
 		 }
@@ -103,6 +108,7 @@ $mysql_conn->close();
 <label for="category">Category:</label> <select name="category" id="category"><option value="NEWS">News</option><option value="SPORT">Sport</option><option value="SHOWBIZ">Showbiz</option><option value="BUSINESS">Business</option><option value="BBC">BBC</option><option value="PROSPECTS">Prospects</option><option value="PINNED">Pinned</option></select><br>
 <label for="addedby">Added by*:</label> <input type="text" maxlength="25" name="addedby" required value="<?php echo $_SERVER['PHP_AUTH_USER'] ?>"><br>
 <label for="audiofile">Audio file:</label> <input type="file" name="audiofile"><br>
+<label for="renameaudio">Rename audio file:</label> <input type="text" maxlength="30" id="renameaudio" name="renameaudio"><br>
 <label for="audiocredit">Audio credit:</label> <input type="text" maxlength="30" id="audiocredit" name="audiocredit"><br>
 <br>
 Script*:<br>
