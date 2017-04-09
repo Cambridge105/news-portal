@@ -1,3 +1,6 @@
+<?php
+require_once("basic_auth.php");
+?>
 <html>
 <head>
 <title>Cambridge 105 Local News Portal</title>
